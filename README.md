@@ -59,22 +59,105 @@ At the very bottom of the file, I noticed something else too—just a string of 
 So I was like, okay, let’s see what this is hiding.
 
 ### Step 2: Checked that Base64 string in the `Disallow:` field
-At first glance, that looked like Base64, so I threw it into a decoder. The first result looked like a URL-encoded string. Decoded that too. Then another round of Base64.
+At first glance, that looked like Base64, so I threw it into a decoder. It had **multiple layers of encoding**. Here’s the process I followed:
 
-But honestly, the result still felt off. Looked more like garbage or some multi-layer obfuscation, so I shelved that for now and focused on the easier win.
-
-### Step 3: That Hex Tho 👀
-Now this hex string? Straightforward.
-I popped it into a hex-to-text converter (you can even do it manually if you're wild like that) and boom:
-
+1. Decoded once (base64):
 ```
-Easter 1: THM{4u70b07_r0ll_0u7}
+VSBpIEIgSCBJIEYgWSBnIGUgaSBCIFQgSSBEIEkgZyBWIGkgQiB6IEkgRiBnIGcgTSB5IEIgTyBJIEcgdyBnIFcgUyBBIHogSSBFIG8gZyBiIEMgQiBrIEkgRSBZIGcgTyBTIEIgcCBJIEYgayBnIFcgQyBCIE8gSSBHIHcgPQ==
+```
+2. Decoded again (base64):
+```
+U i B H I F Y g e i B T I D I g V i B z I F g g M y B O I G w g W S A z I E o g b C B k I E Y g O S B p I F k g W C B O I G w
+```
+3. Another round gave:
+```
+R G V z S 2 V s X 3 N l Y 3 J l d F 9 i Y X N l
+```
+4. Final base64 decode:
+```
+DesKel_secret_base
 ```
 
-Easy first flag. Let’s gooo 🏁
+Looks like a hidden directory!
 
-### ✅ Flag:
-`THM{4u70b07_r0ll_0u7}`
+### Step 3: Navigated to `/DesKel_secret_base`
+Went to the directory in the browser and saw this HTML page with a photo and a cheeky message:
+```html
+<html>
+	<head>
+		<title> A slow clap for you</title>
+		<h1 style="text-align:center;">A slow clap for you</h1>
+	</head>
+	
+	<body>
+	<p style="text-align:center;"><img src="kim.png"/></p>
+	<p style="text-align:center;">Not bad, not bad.... papa give you a clap</p>
+	<p style="text-align:center;color:white;">Easter 2: THM{f4ll3n_b453}</p>
+	</body>
+</html>
+```
+The flag was hidden in the white-colored text. A little sneaky but nothing we couldn’t handle.
 
-Moral of the story? Always check `robots.txt` — sometimes devs can’t help themselves and leave the good stuff out in the open. One egg down, nineteen to go. Let’s keep cookin’.
+### Step 4: Exploring `/login`
+Then I checked out the `/login` page. It was a very basic form with just username and password fields. But here’s the kicker—the source code had a hidden message:
 
+```html
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<p hidden>Seriously! You think the php script inside the source code? Pfff.. take this easter 3: THM{y0u_c4n'7_533_m3}</p> 
+	<title>Can you find the egg?</title>
+	<h1>Just an ordinary login form!</h1>
+</head>
+
+<body>
+	<p>You don't need to register yourself</p><br><br>
+	<form method='POST'>
+		Username:<br>
+		<input type="text" name="username" required>
+		<br><br>
+		Password:<br>
+		<input type="text" name="password" required>
+		<br><br>
+		<button name="submit" value="submit">Login</button>
+	</form>
+</body>
+```
+
+Boom! Another Easter egg. Hidden in a `<p hidden>` tag. Love to see it.
+
+### Step 5: Revisiting the Homepage (Troll City)
+
+So I circled back to the homepage—and oh boy, DesKel’s got jokes. Right off the bat, I saw:
+
+```html
+<h3>I want to play a game</h3>
+<img src="saw.gif"/>
+<a href="/game1"><h2>GAME 1</h2></a>
+<a href="/game2"><h2>GAME 2</h2></a>
+```
+
+Two clickable game links. A classic SAW reference? This is getting spicy.
+
+And further down, a rainbow cat apocalypse:
+
+```html
+<h3>EXPLODING RAINBOW.......</h3>
+<img src="cat.gif"/><img src="cat.gif"/><img src="cat.gif"/><img src="cat.gif"/><img src="cat.gif"/>
+<!--! Easter 17-->
+<button onclick="nyan()">Mulfunction button</button><br>
+<p id="nyan"></p>
+```
+
+That "Mulfunction" button might be linked to some JS mischief (maybe an inline script or obfuscated logic). I haven't clicked yet but I'm noting this down for deeper inspection.
+
+There’s also a comment with `<!--! Easter 17-->`, which means another flag might be nearby, possibly hidden behind the button logic.
+
+Also found something labeled **Easter 14** with a **ridiculously long hash**, but I decided to skip documenting that one for now—it’s just noise until I see context or can crack it later.
+
+### ✅ Flags:
+- Easter 1: `THM{4u70b07_r0ll_0u7}`
+- Easter 2: `THM{f4ll3n_b453}`
+- Easter 3: `THM{y0u_c4n'7_533_m3}`
+
+Three eggs cracked. Let’s keep the hunt going 🥚🔍
