@@ -155,9 +155,9 @@ There’s also a comment with `<!--! Easter 17-->`, which means another flag mig
 
 Also found something labeled **Easter 14** with a **ridiculously long hash**, but I decided to skip documenting that one for now—it’s just noise until I see context or can crack it later.
 
-### ✅ Flags:
+###  Flags:
 - Easter 1: `THM{4u70b07_r0ll_0u7}`
 - Easter 2: `THM{f4ll3n_b453}`
 - Easter 3: `THM{y0u_c4n'7_533_m3}`
 
-Three eggs cracked. Let’s keep the hunt going 🥚🔍
+Three eggs cracked. Let’s keep the hunt going 
